@@ -1,5 +1,5 @@
 export interface PostDB {
-    id: string,
+    post_id: string,
     creator_id: string,
     content: string,
     likes: number,
@@ -9,8 +9,8 @@ export interface PostDB {
 }
 
 export interface PostModel {
-    id: string,
-    creator_id: string,
+    postId: string,
+    creatorId: string,
     content: string,
     likes: number,
     dislikes: number
@@ -20,8 +20,8 @@ export interface PostModel {
 
 export class Post{
     constructor(
-        private id: string,
-        private creator_id: string,
+        private postId: string,
+        private creatorId: string,
         private content: string,
         private likes: number,
         private dislikes: number,
@@ -29,17 +29,17 @@ export class Post{
         private updatedAt: string
     ){}
 
-    public getId(): string {
-        return this.id;
+    public getPostId(): string {
+        return this.postId;
     }
-    public setId(value: string) {
-        this.id = value;
+    public setPostId(value: string) {
+        this.postId = value;
     }
-    public getCreatorid(): string {
-        return this.creator_id;
+    public getCreatorId(): string {
+        return this.creatorId;
     }
-    public setCreator_id(value: string) {
-        this.creator_id = value;
+    public setCreatorId(value: string) {
+        this.creatorId = value;
     }
     public getContent(): string {
         return this.content;
@@ -75,8 +75,8 @@ export class Post{
 
     public toDBModel(): PostDB {
         return {
-            id: this.id,
-            creator_id: this.creator_id,
+            post_id: this.postId,
+            creator_id: this.creatorId,
             content: this.content,
             likes: this.likes,
             dislikes: this.dislikes,
@@ -87,8 +87,8 @@ export class Post{
 
     public toBusinessModel(): PostModel {
         return {
-            id: this.id,
-            creator_id:this.creator_id,
+            postId: this.postId,
+            creatorId:this.creatorId,
             content: this.content,
             likes: this.likes,
             dislikes: this.dislikes,

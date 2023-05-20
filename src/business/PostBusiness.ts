@@ -35,7 +35,7 @@ export class PostBusiness{
         })
 
         if(!posts){
-            throw new Error ("post não existe")
+            throw new Error ("Esse post não existe")
         }
         return posts
     }
@@ -46,7 +46,7 @@ export class PostBusiness{
         const payload = this.tokenManager.getPayload(token)
         if(payload === null) throw new Error("token inválido")
 
-        const id = this.idGenerator.generate()
+        const post_id = this.idGenerator.generate()
         const creator_id = payload.id
         const likes = 0
         const dislikes = 0
@@ -58,7 +58,7 @@ export class PostBusiness{
 
         
         const newPost = new Post (
-          id,
+          post_id,
           creator_id,
           content,
           likes,
@@ -78,17 +78,17 @@ export class PostBusiness{
         return output
       }
 
-    public editPost = async (index: EditPostInputDTO) => {
-        const {idToEdit, content, token} = index
+    public editPost = async (input: EditPostInputDTO) => {
+        const {id, content, token} = input
 
-        if(!idToEdit) throw new Error("id do posto precisa ser inserido")
+        if(!id) throw new Error("id do post precisa ser inserido")
         if (!content) throw new Error("Conteúdo precisa ser atualizado")
         if(typeof token !== "string") throw new Error("token inválido")
 
         const payload = this.tokenManager.getPayload(token)
         if(payload === null) throw new BadRequestError("token inválido")
 
-        const postToEdit = await this.postDatabase.getPostsById(idToEdit)
+        const postToEdit = await this.postDatabase.getPostsById(id)
 
         // if(payload.role !== USER_ROLES.ADMIN) throw new Error("Deve ser admin para editar")
             if(postToEdit.creator_id !== payload.id) throw new Error("Sem autorização")
@@ -99,7 +99,7 @@ export class PostBusiness{
             const updatedAt = new Date().toISOString();
 
             const postEdited = new Post(
-                idToEdit,
+                id,
                 postToEdit.creator_id,
                 content,
                 postToEdit.likes,
@@ -109,7 +109,7 @@ export class PostBusiness{
             )
 
             const postEditedDB = postEdited.toDBModel()
-            await this.postDatabase.editPost(postEditedDB, idToEdit)
+            await this.postDatabase.editPost(postEditedDB, id)
 // console.log(postEditedDB)
             const output = {
                 message: "Post atualizado",
@@ -139,7 +139,7 @@ export class PostBusiness{
             const output: DeletePostOutputDTO = {
                 message: "post deletado",
                 post: {
-                    id: postToDelete.id,
+                    id: postToDelete.post_id,
                     creator_id: postToDelete.creator_id,
                     content: postToDelete.content,
                     likes: postToDelete.likes,

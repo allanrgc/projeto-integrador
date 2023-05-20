@@ -29,8 +29,9 @@ export class CommentController{
         try {
     
           const input = {
-            comment: req.body.name,
-            token: req.body.price
+            post_id: req.params.id,
+            comment: req.body.comment,
+            token: req.headers.authorization as string
           }
     
           const output = await this.commentBusiness.createComment(input)

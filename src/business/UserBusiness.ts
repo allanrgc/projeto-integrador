@@ -23,7 +23,6 @@ export class UserBusiness{
         const {q, token} = input
 
         const payload = this.tokenManager.getPayload(token)
-console.log(payload)
         if(payload === null){
             throw new Error ("token inválido")
         }
@@ -131,7 +130,7 @@ console.log(payload)
         const token = this.tokenManager.createToken(tokenPayload)
     
         const output: LoginOutputDTO = {
-          message: "Login realizado com sucesso",
+          message: "Login realizado com sucesso.",
           token: token
         }
     

@@ -31,14 +31,14 @@ CREATE TABLE likes_dislikes(
 
 CREATE TABLE comments(
     comment_id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    user_id TEXT NOT NULL
+    user_id TEXT NOT NULL,
     post_id TEXT NOT NULL,
     comment TEXT NOT NULL,
     created_at TEXT DEFAULT(DATETIME('now', 'localtime')) NOT NULL,
     Foreign Key (post_id) REFERENCES posts(post_id),
     Foreign Key (user_id) REFERENCES users(id)
 );
-
+SELECT * FROM posts;
 INSERT INTO users (id, name, email, password, role)
 VALUES
 ("u001","Maria","maria@gmail.com","senha123","NORMAL"),

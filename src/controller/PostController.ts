@@ -3,6 +3,7 @@ import { PostBusiness } from "../business/PostBusiness";
 import { BaseError } from "../errors/BaseError";
 import { EditPostInputDTO } from "../dtos/post/editPost.dto";
 import { DeletePostInputDTO } from "../dtos/post/deletePost.dto";
+import { CreatePostInputDTO } from "../dtos/post/createPost.dto";
 
 
 export class PostController{
@@ -25,13 +26,13 @@ export class PostController{
         }
     }
 
-    public createPost = async (req: Request, res: Response) => {
+    public createPost = async (req: Request, res: Response)=> {
         try {
     
           const input = {
             // id: req.body.id,
-            content: req.body.name,
-            token: req.body.price
+            content: req.body.content,
+            token: req.headers.authorization as string
           }
     
           const output = await this.postBusiness.createPost(input)
@@ -51,7 +52,7 @@ export class PostController{
     public editPost = async (req: Request, res: Response) => {
         try {
             const input: EditPostInputDTO = {
-                idToEdit: req.params.id,
+                id: req.params.id,
                 content: req.body.content,
                 token: req.headers.authorization
             }

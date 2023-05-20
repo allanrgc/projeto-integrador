@@ -2,8 +2,9 @@ import z from "zod"
 import { CommentModel } from "../../models/Comment"
 
 export interface CreateCommentInputDTO{
-        comment: string,
-        token: string
+  post_id: string,
+  comment: string,
+  token: string
 }
 
 export interface CreateCommentOutputDTO{
