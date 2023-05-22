@@ -9,7 +9,9 @@ export class LikeDislikeController {
 
   public async likePost(req: Request, res: Response) {
     try {
-      const { userId, postId } = req.body;
+      // const { userId, postId } = req.body;
+      const postId = req.params.id
+      const userId = req.headers.authorization as string
 
       await this.likeDislikeBusiness.likePost(userId, postId);
 

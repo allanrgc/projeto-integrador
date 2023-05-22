@@ -73,9 +73,7 @@ export class UserDatabase extends BaseDatabase{
         return userDB
       }
 
-      public async insertUser(
-        newUserDB: UserDB
-      ): Promise<void> {
+      public async insertUser(newUserDB: UserDB): Promise<void> {
         await BaseDatabase
           .connection(UserDatabase.TABLE_USERS)
           .insert(newUserDB)
