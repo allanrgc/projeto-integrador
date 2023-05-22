@@ -3,6 +3,7 @@ import cors from 'cors';
 import { userRouter } from './routers/userRouter';
 import { postRouter } from './routers/postRouter';
 import { commentRouter } from './routers/commentRouter';
+import { likeDislikeRouter } from './routers/likeRouter';
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.get("/ping", (req: Request, res: Response) => {
 app.use("/users", userRouter)
 app.use("/posts", postRouter)
 app.use("/comments", commentRouter)
+app.use("/likeDislike", likeDislikeRouter)
 
 

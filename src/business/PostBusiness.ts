@@ -1,6 +1,6 @@
 import { PostDatabase } from "../database/PostDatabase";
 import { UserDatabase } from "../database/UserDatabase";
-import { Post, PostDB } from "../models/Post";
+import { LikeDislikeDB, POST_LIKE, Post, PostDB } from "../models/Post";
 import { IdGenerator } from "../services/IdGenerator";
 import { CreatePostInputDTO, CreatePostOutputDTO } from "../dtos/post/createPost.dto";
 import { TokenManager } from "../services/TokenManager";
@@ -9,6 +9,7 @@ import { EditPostInputDTO, EditPostOutputDTO } from "../dtos/post/editPost.dto";
 import { type } from "os";
 import { USER_ROLES } from "../models/User";
 import { DeletePostInputDTO, DeletePostOutputDTO } from "../dtos/post/deletePost.dto";
+import { LikeOrDislikePostInputDTO, LikeOrDislikePostOutputDTO } from "../dtos/post/likeDislikePost.dto";
 
 
 export class PostBusiness{
@@ -89,7 +90,7 @@ export class PostBusiness{
         if(payload === null) throw new BadRequestError("token inválido")
 
         const postToEdit = await this.postDatabase.getPostsById(id)
-
+// console.log(postToEdit)
         // if(payload.role !== USER_ROLES.ADMIN) throw new Error("Deve ser admin para editar")
             if(postToEdit.creator_id !== payload.id) throw new Error("Sem autorização")
 
@@ -109,8 +110,9 @@ export class PostBusiness{
             )
 
             const postEditedDB = postEdited.toDBModel()
-            await this.postDatabase.editPost(postEditedDB, id)
-// console.log(postEditedDB)
+            // console.log(postEditedDB)
+            await this.postDatabase.editPost(postEditedDB)
+  
             const output = {
                 message: "Post atualizado",
                 post: postEdited
@@ -150,4 +152,78 @@ export class PostBusiness{
             }
         return output
     }
+
+    public likeOrDislikePost = async (
+        input: LikeOrDislikePostInputDTO
+      ): Promise<LikeOrDislikePostOutputDTO> => {
+        const { token, like, postId } = input
+    
+        const payload = this.tokenManager.getPayload(token)
+    
+        if (!payload) {
+          throw new Error("Você não tem autorização")
+        }
+    
+        const postDBWithCreatorName =
+          await this.postDatabase.findPostWithCreatorNameById(postId)
+    
+        if (!postDBWithCreatorName) {
+          throw new Error("post com essa id não existe")
+        }
+    
+        const post = new Post(
+          postDBWithCreatorName.id,
+          postDBWithCreatorName.creator_id,
+          postDBWithCreatorName.name,
+          postDBWithCreatorName.likes,
+          postDBWithCreatorName.dislikes,
+          postDBWithCreatorName.created_at,
+          postDBWithCreatorName.updated_at,
+          
+        //   postDBWithCreatorName.creator_name
+        )
+    
+        const likeSQlite = like ? 1 : 0
+    
+        const likeDislikeDB: LikeDislikeDB = {
+          user_id: payload.id,
+          post_id: postId,
+          like: likeSQlite
+        }
+    
+        const likeDislikeExists =
+          await this.postDatabase.findLikeDislike(likeDislikeDB)
+    
+        if (likeDislikeExists === POST_LIKE.ALREADY_LIKED) {
+          if (like) {
+            await this.postDatabase.removeLikeDislike(likeDislikeDB)
+            post.removeLike()
+          } else {
+            await this.postDatabase.updateLikeDislike(likeDislikeDB)
+            post.removeLike()
+            post.addDislike()
+          }
+    
+        } else if (likeDislikeExists === POST_LIKE.ALREADY_DISLIKED) {
+          if (like === false) {
+            await this.postDatabase.removeLikeDislike(likeDislikeDB)
+            post.removeDislike()
+          } else {
+            await this.postDatabase.updateLikeDislike(likeDislikeDB)
+            post.removeDislike()
+            post.addLike()
+          }
+    
+        } else {
+          await this.postDatabase.insertLikeDislike(likeDislikeDB)
+          like ? post.addLike() : post.addDislike()
+        }
+    
+        const updatedPostDB = post.toDBModel()
+        await this.postDatabase.editPost(updatedPostDB)
+    
+        const output: LikeOrDislikePostOutputDTO = undefined
+    
+        return output
+      }
 }

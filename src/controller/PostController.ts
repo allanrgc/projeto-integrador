@@ -4,6 +4,7 @@ import { BaseError } from "../errors/BaseError";
 import { EditPostInputDTO } from "../dtos/post/editPost.dto";
 import { DeletePostInputDTO } from "../dtos/post/deletePost.dto";
 import { CreatePostInputDTO } from "../dtos/post/createPost.dto";
+import { LikeOrDislikePostSchema } from "../dtos/post/likeDislikePost.dto";
 
 
 export class PostController{
@@ -88,5 +89,28 @@ export class PostController{
             res.status(500).send("Erro inesperado")
           }
         }
+    }
+
+    public likeOrDislikePost = async (req: Request, res: Response) => {
+      try {
+        const input = LikeOrDislikePostSchema.parse({
+          token: req.headers.authorization,
+          postId: req.params.id,
+          like: req.body.like
+        })
+  
+        const output = await this.postBusiness.likeOrDislikePost(input)
+  
+        res.status(200).send(output)
+        
+      } catch (error) {
+        console.log(error)
+
+      if (error instanceof BaseError) {
+        res.status(error.statusCode).send(error.message)
+      } else {
+        res.status(500).send("Erro inesperado")
+      }
+    }
     }
 }

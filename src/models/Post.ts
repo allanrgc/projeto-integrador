@@ -8,6 +8,17 @@ export interface PostDB {
     updated_at: string
 }
 
+export interface PostDBWithCreatorName {
+    id: string,
+    creator_id: string,
+    name: string,
+    likes: number,
+    dislikes: number,
+    created_at: string,
+    updated_at: string,
+    creator_name: string
+  }
+
 export interface PostModel {
     postId: string,
     creatorId: string,
@@ -18,10 +29,23 @@ export interface PostModel {
     updatedAt: string
 }
 
+export interface LikeDislikeDB {
+    user_id: string,
+    post_id: string,
+    like: number
+  }
+  
+  export enum POST_LIKE {
+    ALREADY_LIKED = "ALREADY LIKED",
+    ALREADY_DISLIKED = "ALREADY DISLIKED"
+  }
+
 export class Post{
+    
     constructor(
         private postId: string,
         private creatorId: string,
+        // private creatorName: string,
         private content: string,
         private likes: number,
         private dislikes: number,
@@ -41,21 +65,44 @@ export class Post{
     public setCreatorId(value: string) {
         this.creatorId = value;
     }
+    // public getCreatorName(): string {
+    //     return this.creatorName
+    // }
+    // public setCreatorName(value: string) {
+    //     this.creatorName = value
+    // }
     public getContent(): string {
         return this.content;
     }
     public setContent(value: string) {
         this.content = value;
     }
+
     public getLikes(): number {
         return this.likes;
     }
     public setLikes(value: number) {
         this.likes = value;
     }
+    public addLike = ():void => {
+        this.likes++
+    }
+    public removeLike = (): void => {
+        this.likes--
+    }
     public getDislikes(): number {
         return this.dislikes;
     }
+    public setDislike(value: number) {
+        this.dislikes = value
+    }
+    public addDislike = (): void => {
+        this.dislikes++
+    }
+    public removeDislike = (): void => {
+        this.dislikes--
+    }
+
     public setDislikes(value: number) {
         this.dislikes = value;
     }
@@ -96,5 +143,6 @@ export class Post{
             updatedAt: this.updatedAt
         }
     }
+    
     
 }
