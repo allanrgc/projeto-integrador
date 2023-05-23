@@ -38,10 +38,10 @@ export class CommentBusiness{
 
     public createComment = async (input: CreateCommentInputDTO): Promise<CreateCommentOutputDTO> => {
         const {post_id, comment, token} = input
-console.log("id",post_id)
+// console.log("id",post_id)
         const postDB = await this.postDatabase.getPostsById(post_id)
         if(!postDB) throw new Error("id do post precisa ser inserido")
-console.log("post",postDB)
+// console.log("post",postDB)
         const payload = this.tokenManager.getPayload(token)
         if(payload === null) throw new Error("token inválido")
 
@@ -62,7 +62,7 @@ console.log("post",postDB)
         )
     
         const newCommentDB = newComment.toDBModel()
-        console.log("comment",newCommentDB)
+        // console.log("comment",newCommentDB)
         await this.commentDatabase.createComment(newCommentDB)
     
         const output = {

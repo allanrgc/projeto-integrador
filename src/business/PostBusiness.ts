@@ -172,9 +172,9 @@ export class PostBusiness{
         }
     
         const post = new Post(
-          postDBWithCreatorName.id,
+          postDBWithCreatorName.post_id,
           postDBWithCreatorName.creator_id,
-          postDBWithCreatorName.name,
+          postDBWithCreatorName.content,
           postDBWithCreatorName.likes,
           postDBWithCreatorName.dislikes,
           postDBWithCreatorName.created_at,
@@ -182,7 +182,7 @@ export class PostBusiness{
           
         //   postDBWithCreatorName.creator_name
         )
-    
+    // console.log("testandoposDB creator", postDBWithCreatorName)
         const likeSQlite = like ? 1 : 0
     
         const likeDislikeDB: LikeDislikeDB = {
@@ -190,7 +190,6 @@ export class PostBusiness{
           post_id: postId,
           like: likeSQlite
         }
-    
         const likeDislikeExists =
           await this.postDatabase.findLikeDislike(likeDislikeDB)
     
@@ -218,8 +217,9 @@ export class PostBusiness{
           await this.postDatabase.insertLikeDislike(likeDislikeDB)
           like ? post.addLike() : post.addDislike()
         }
-    
+        
         const updatedPostDB = post.toDBModel()
+        // console.log("testando updateDB", updatedPostDB)
         await this.postDatabase.editPost(updatedPostDB)
     
         const output: LikeOrDislikePostOutputDTO = undefined

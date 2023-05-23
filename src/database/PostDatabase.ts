@@ -43,7 +43,7 @@ export class PostDatabase extends BaseDatabase{
         await BaseDatabase
           .connection(PostDatabase.TABLE_POSTS)
           .update(postDB)
-          .where({ id: postDB.post_id })
+          .where({ post_id: postDB.post_id })
       }
 
       public async deletePost(idToDelete: string ) {
@@ -59,9 +59,9 @@ export class PostDatabase extends BaseDatabase{
     const [result] = await BaseDatabase
       .connection(PostDatabase.TABLE_POSTS)
       .select(
-        `${PostDatabase.TABLE_POSTS}.id`,
+        `${PostDatabase.TABLE_POSTS}.post_id`,
         `${PostDatabase.TABLE_POSTS}.creator_id`,
-        `${PostDatabase.TABLE_POSTS}.name`,
+        `${PostDatabase.TABLE_POSTS}.content`,
         `${PostDatabase.TABLE_POSTS}.likes`,
         `${PostDatabase.TABLE_POSTS}.dislikes`,
         `${PostDatabase.TABLE_POSTS}.created_at`,
@@ -74,7 +74,7 @@ export class PostDatabase extends BaseDatabase{
         "=",
         `${UserDatabase.TABLE_USERS}.id`
       )
-      .where({ [`${PostDatabase.TABLE_POSTS}.id`]: id })
+      .where({ [`${PostDatabase.TABLE_POSTS}.post_id`]: id })
     
     return result as PostDBWithCreatorName | undefined
   }
@@ -90,7 +90,7 @@ export class PostDatabase extends BaseDatabase{
         user_id: likeDislikeDB.user_id,
         post_id: likeDislikeDB.post_id
       })
-
+console.log("testando result da database", result)
     if (result === undefined) {
       return undefined
 

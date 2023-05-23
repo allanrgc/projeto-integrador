@@ -94,11 +94,11 @@ export class PostController{
     public likeOrDislikePost = async (req: Request, res: Response) => {
       try {
         const input = LikeOrDislikePostSchema.parse({
-          token: req.headers.authorization,
           postId: req.params.id,
+          token: req.headers.authorization,
           like: req.body.like
         })
-  
+  // console.log("Testando input",input)
         const output = await this.postBusiness.likeOrDislikePost(input)
   
         res.status(200).send(output)

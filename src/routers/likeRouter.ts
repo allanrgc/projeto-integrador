@@ -11,5 +11,5 @@ const likeDislikeController = new LikeDislikeController(
     )
 );
 
-likeDislikeRouter.post('/like/:id', likeDislikeController.likePost.bind(likeDislikeController));
+likeDislikeRouter.post('/like', likeDislikeController.likePost.bind(likeDislikeController));
 likeDislikeRouter.post('/dislike', likeDislikeController.dislikePost.bind(likeDislikeController));

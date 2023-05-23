@@ -9,9 +9,9 @@ export interface PostDB {
 }
 
 export interface PostDBWithCreatorName {
-    id: string,
+    post_id: string,
     creator_id: string,
-    name: string,
+    content: string,
     likes: number,
     dislikes: number,
     created_at: string,
