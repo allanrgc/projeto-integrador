@@ -90,7 +90,7 @@ export class PostDatabase extends BaseDatabase{
         user_id: likeDislikeDB.user_id,
         post_id: likeDislikeDB.post_id
       })
-console.log("testando result da database", result)
+// console.log("testando result da database", result)
     if (result === undefined) {
       return undefined
 
